@@ -1,6 +1,6 @@
 .headerContainer {
   height: 5rem;
-  border-bottom: 1px solid var(--gray-darkLess);
+  border-bottom: 1px solid var(--gray-800);
 }
 
 .headerContent {
@@ -22,7 +22,7 @@
       padding: 0 0.5rem;
       height: 5rem;
       line-height: 5rem;
-      color: var(--gray-medium);
+      color: var(--gray-500);
 
       transition: color 0.2s;
 
@@ -47,8 +47,12 @@
         position: absolute;
         bottom: 1px;
         left: 0;
-        background-color: var(--yellow-medium);
+        background-color: var(--yellow-500);
       }
     }
+  }
+
+  button {
+    margin-left: auto;
   }
 }
