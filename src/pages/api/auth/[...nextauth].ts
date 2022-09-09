@@ -12,36 +12,34 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async session({session}) {
+    async session({ session }) {
       try {
         const userActiveSubscription = await fauna.query(
           query.Get(
             query.Intersection([
               query.Match(
-                query.Index('subscription_by_user_ref'),
-                query.Select("ref",
-                query.Get(
-                  query.Match(
-                    query.Index('user_by_email'),
-                    query.Casefold(session.user.email)
+                query.Index("subscription_by_user_ref"),
+                query.Select(
+                  "ref",
+                  query.Get(
+                    query.Match(
+                      query.Index("user_by_email"),
+                      query.Casefold(session.user.email)
+                    )
                   )
-                ))
+                )
               ),
-              query.Match(
-                query.Index('subscription_by_status'),
-                "active"
-              )
+              query.Match(query.Index("subscription_by_status"), "active"),
             ])
           )
-        )
-  
-        return {...session, activeSubscription: userActiveSubscription}
-      } catch (err) {
-        return {...session, activeSubscription: null}
-      }
+        );
 
+        return { ...session, activeSubscription: userActiveSubscription };
+      } catch (err) {
+        return { ...session, activeSubscription: null };
+      }
     },
-    async signIn({ user, profile, account }) {    
+    async signIn({ user }) {
       const { email } = user;
 
       try {
@@ -50,30 +48,26 @@ export default NextAuth({
             query.Not(
               query.Exists(
                 query.Match(
-                  query.Index('user_by_email'),
+                  query.Index("user_by_email"),
                   query.Casefold(user.email)
                 )
               )
             ),
-            query.Create(
-              query.Collection('users'),
-              { data: { email } }
-            ),
+            query.Create(query.Collection("users"), { data: { email } }),
             query.Get(
               query.Match(
-                query.Index('user_by_email'),
+                query.Index("user_by_email"),
                 query.Casefold(user.email)
               )
             )
           )
-        )
+        );
 
-        return true
+        return true;
       } catch (error) {
         console.log(error);
-        return false
+        return false;
       }
-
     },
-  }
-})
+  },
+});
